@@ -6,16 +6,9 @@ $("#citySearchBtn").on("click", function(event){
     event.preventDefault();
 
     cityname = $("#cityInput").val().trim();
-    if(cityname === ""){
-        alert("Please enter a city to look up")
 
-    }else if (cityList.length >= 7){  
-        cityList.shift();
-        cityList.push(cityname);
+    console.log(cityname);
 
-    }else{
-    cityList.push(cityname);
-    }
 })
 
 console.log(cityname);
