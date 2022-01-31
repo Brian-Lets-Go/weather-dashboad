@@ -4,6 +4,7 @@ var apiKey = "a54f2a17bb00ab25d9743d47a124968d";
 var lat;
 var lon;
 var currentWeatherDiv = $("<div class='card-body' id='currentWeather'>");
+var forecastDiv = document.createElement("div");
 
 
 initCityList();
@@ -193,7 +194,15 @@ fiveDayForecast()
 
 }
 
+// function clearForecatDiv() {
+
+//     document.querySelector("#forecastContainer").clear();
+
+// }
+
 function fiveDayForecast () {
+
+    forecastDiv.innerHTML = "";
 
     var testURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}`;
 
@@ -202,9 +211,10 @@ function fiveDayForecast () {
         if (response.ok) {
             console.log(response);
         response.json().then(function (data) {
-        console.log(data);
+        
 
-        var forecastDiv = document.createElement("div");
+
+        // var forecastDiv = document.createElement("div");
         var forecastHeader = document.createElement("h5");
         forecastHeader.innerHTML = "5 Day Forecast";
         forecastDiv.append(forecastHeader);
@@ -215,7 +225,7 @@ function fiveDayForecast () {
         var cardDeck = document.createElement("div")
         cardDeck.setAttribute("class", "card-deck d-flex flex-row");
         forecastDiv.append(cardDeck);
-        console.log(forecastDiv);
+
 
         //loop
         for (var i = 1; i < 6; i++) {
@@ -277,3 +287,5 @@ function fiveDayForecast () {
     })}
 })
 }
+
+
