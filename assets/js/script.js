@@ -1,4 +1,3 @@
-// Global variable declarations
 var cityList = [];
 var cityName;
 var apiKey = "a54f2a17bb00ab25d9743d47a124968d";
@@ -6,9 +5,9 @@ var lat;
 var lon;
 var currentWeatherDiv = $("<div class='card-body' id='currentWeather'>");
 
+
 initCityList();
 
-// This function displays the city entered by the user into the DOM
 function renderCities(){
     $("#cityList").empty();
     $("#cityInput").val("");
@@ -22,7 +21,6 @@ function renderCities(){
     } 
 }
 
-// This function pulls the city list array from local storage
 function initCityList() {
     var storedCities = JSON.parse(localStorage.getItem("cities"));
     
@@ -33,7 +31,6 @@ function initCityList() {
     renderCities();
 }
 
-// This function saves the city array to local storage
 function storeCityArray() {
 
     localStorage.setItem("cities", JSON.stringify(cityList));
@@ -73,8 +70,6 @@ $(".city").on("click", historyDisplayWeather);
 
 function getLatLong() {
 
-console.log(cityName);
-
 var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=${apiKey}`;
 
 fetch(queryURL)
@@ -87,13 +82,12 @@ fetch(queryURL)
         // console.log(response);
 
         response.json().then(function (data) {
-        console.log(data);
+        // console.log(data);
 
         currentWeatherDiv.empty();
 
         //city name
         var getCityName = data.name
-        console.log(getCityName);
         var currentCityEl = document.createElement("h3");
         currentCityEl.setAttribute("class", "card-text");
         currentCityEl.textContent = getCityName;
@@ -107,7 +101,6 @@ fetch(queryURL)
         var humanDateEl = document.createElement("p");
         humanDate = dateObject.toLocaleString();
         humanDateEl.textContent = humanDate;
-        console.log(humanDateEl);
         humanDateEl.setAttribute("class", "card-text");
         currentWeatherDiv.append(humanDateEl);
 
@@ -144,9 +137,9 @@ function getOneCall () {
     fetch(testURL)
         .then(function (response) {
         if (response.ok) {
-            console.log(response);
+            // console.log(response);
         response.json().then(function (data) {
-        console.log(data);
+        // console.log(data);
         
         //temperature
         var kelvin = data.current.temp;
@@ -180,7 +173,6 @@ function getOneCall () {
 
         //UV index
         var uvi = data.current.uvi;
-        console.log(uvi);
         var uvIndexEl = document.createElement("p");
         uvIndexEl.setAttribute("class", "card-text");
         uvIndexEl.append(uvi);
@@ -195,5 +187,93 @@ function getOneCall () {
             uvIndexEl.setAttribute("class", "high");
         } 
     })}
-})}
+})
 
+fiveDayForecast()
+
+}
+
+function fiveDayForecast () {
+
+    var testURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+
+    fetch(testURL)
+        .then(function (response) {
+        if (response.ok) {
+            console.log(response);
+        response.json().then(function (data) {
+        console.log(data);
+
+        var forecastDiv = document.createElement("div");
+        var forecastHeader = document.createElement("h5");
+        forecastHeader.innerHTML = "5 Day Forecast";
+        forecastDiv.append(forecastHeader);
+        var forecastCard = document.createElement("div");
+        forecastCard.setAttribute("class", "card mb-3 mt-3");
+
+
+        var cardDeck = document.createElement("div")
+        cardDeck.setAttribute("class", "card-deck d-flex flex-row");
+        forecastDiv.append(cardDeck);
+        console.log(forecastDiv);
+
+        //loop
+        for (var i = 1; i < 6; i++) {
+
+            var cardBody = document.createElement("div");
+            cardBody.setAttribute("class", "card-body");
+
+            var cardDateUnix = data.daily[i].dt;
+            var dateMilliseconds = cardDateUnix * 1000;
+            var dateObject = new Date(dateMilliseconds);
+            var humanDateEl = document.createElement("p");
+            humanDate = dateObject.toLocaleString();
+            humanDateEl.textContent = humanDate;
+            humanDateEl.setAttribute("class", "card-text");
+            cardBody.append(humanDateEl);
+
+            //icon
+            var icon = data.daily[i].weather[0].icon;
+            var displayIcon = document.createElement("img");
+            displayIcon.setAttribute("src", "http://openweathermap.org/img/wn/" + icon + "@2x.png");        
+            var displayIconEl = document.createElement("div");
+            displayIconEl.setAttribute("class", "card-text");
+            cardBody.append(displayIcon);
+
+            //temp
+            var kelvin = data.daily[i].temp.day;
+            var farTemp = Math.floor(((kelvin - 273.15) * (9/5) + 32));
+            farTemp = farTemp + " Degrees Farenheight";
+            var farTempEl = document.createElement("p");
+            farTempEl.setAttribute("class", "card-text");
+            farTempEl.append(farTemp);
+            cardBody.append(farTempEl);
+
+            //wind
+            var wind = data.daily[i].wind_speed;
+            var windMph = wind*0.6213
+            var roundedWind = Math.floor(windMph);
+            var displayWind = roundedWind + " MPH";
+            var windEl = document.createElement("p");
+            windEl.setAttribute("class", "card-text");
+            windEl.append(displayWind);
+            cardBody.append(windEl);
+
+            //humidity
+            var humidity = data.daily[i].humidity;
+            var humidPercent = "Humidity " + humidity + "%";
+            var humidEl = document.createElement("p");
+            humidEl.setAttribute("class", "card-text");
+            humidEl.append(humidPercent);
+            cardBody.append(humidEl);
+
+            cardDeck.append(cardBody);
+
+        }
+
+        document.querySelector("#forecastContainer").append(forecastDiv);
+
+
+    })}
+})
+}
