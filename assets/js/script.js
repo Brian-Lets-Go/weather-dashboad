@@ -156,34 +156,44 @@ function getOneCall () {
         var farTempEl = document.createElement("p");
         farTempEl.setAttribute("class", "card-text");
         farTempEl.append(farTemp);
-        console.log(farTemp);
         currentWeatherDiv.append(farTempEl);
 
 
         //humidity
         var humidity = data.current.humidity;
         var humidPercent = "Humidity " + humidity + "%";
-        console.log(humidPercent);
-        currentWeatherDiv.append(humidPercent);
+        var humidEl = document.createElement("p");
+        humidEl.setAttribute("class", "card-text");
+        humidEl.append(humidPercent);
+        currentWeatherDiv.append(humidEl);
 
         //wind speed
         var wind = data.current.wind_speed;
         var windMph = wind*0.6213
         var roundedWind = Math.floor(windMph);
         var displayWind = roundedWind + " MPH";
-        console.log(displayWind);
+        var windEl = document.createElement("p");
+        windEl.setAttribute("class", "card-text");
+        windEl.append(displayWind);
+        currentWeatherDiv.append(windEl);
+
 
         //UV index
         var uvi = data.current.uvi;
         console.log(uvi);
+        var uvIndexEl = document.createElement("p");
+        uvIndexEl.setAttribute("class", "card-text");
+        uvIndexEl.append(uvi);
+        currentWeatherDiv.append(uvIndexEl);
 
 
-
-        
-
+        if (uvi >= 0 && uvi <= 3.99){
+            uvIndexEl.setAttribute("class", "low");
+        }else if(uvi >= 4 && uvi <= 8.99){
+            uvIndexEl.setAttribute("class", "med");
+        }else{
+            uvIndexEl.setAttribute("class", "high");
+        } 
     })}
 })}
 
-
-// localStorage.setItem('tutor', JSON.stringify(testArray));
-// var tutorName = JSON.parse(localStorage.getItem(testArray));
