@@ -194,11 +194,6 @@ fiveDayForecast()
 
 }
 
-// function clearForecatDiv() {
-
-//     document.querySelector("#forecastContainer").clear();
-
-// }
 
 function fiveDayForecast () {
 
